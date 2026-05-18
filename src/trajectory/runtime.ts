@@ -307,6 +307,7 @@ export function createTrajectoryRuntimeRecorder(
       flushTimer = null;
       await writer.flush();
       lastFlushTime = Date.now();
+      scheduleFlush();
     }, flushTimeoutMs);
   };
 

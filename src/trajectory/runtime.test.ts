@@ -231,11 +231,17 @@ describe("trajectory runtime", () => {
       // Before timeout fires, flush should not have been called
       expect(flushCalls).toHaveLength(0);
 
-      // Advance time past the flush timeout
+      // Advance time past the flush timeout — first tick
       await vi.advanceTimersByTimeAsync(5001);
-
-      // Flush should have been called once
       expect(flushCalls).toHaveLength(1);
+
+      // Advance time past a second flush interval — verifies repeating behavior
+      await vi.advanceTimersByTimeAsync(5001);
+      expect(flushCalls).toHaveLength(2);
+
+      // And a third
+      await vi.advanceTimersByTimeAsync(5001);
+      expect(flushCalls).toHaveLength(3);
     } finally {
       vi.useRealTimers();
     }

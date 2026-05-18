@@ -156,6 +156,29 @@ is pruned, capped, or evicted by the sessions disk budget. Runtime files outside
 the sessions directory are removed only when the pointer target still proves it
 belongs to that session.
 
+## Periodic flush interval
+
+By default, trajectory writes are flushed to disk when a session ends. To flush
+periodically during long-running sessions (useful for reasoning traces or
+long-lived agent runs), set `trajectory.flushTimeoutMs` in your config or the
+`OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS` environment variable:
+
+```jsonc
+// openclaw.json
+{
+  "trajectory": {
+    "flushTimeoutMs": 30000, // flush every 30 seconds
+  },
+}
+```
+
+```bash
+export OPENCLAW_TRAJECTORY_FLUSH_TIMEOUT_MS=30000
+```
+
+The timer repeats for the lifetime of the session recorder. This reduces data
+loss if the gateway crashes mid-run, at the cost of slightly higher I/O.
+
 ## Disable capture
 
 Set `OPENCLAW_TRAJECTORY=0` before starting OpenClaw:
